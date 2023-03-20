@@ -1,0 +1,50 @@
+database 설치
+
+select * from tab;
+
+select * from v$version;
+
+selct * from user_catalog;
+
+describe dapartment;
+
+/* sql 문이 실행이 안될 떄는 @주소 실행 */
+
+@C:\Users\Administrator\Downloads\sqlSample (3)\sqlSample\haksa_data.sql;
+
+number(6, 2)함수
+1245.67 -- 1245.67
+2445.778 -- 2445.79
+1233.1 -- 오류
+number(3)
+123
+1244 -- error
+
+char(s), varchar2(s) s는 자리수
+최대길이 2000
+고정길이 문자열
+
+char(10) - '1234' - '1234     ' 10byte
+         - 'computer' - 'computer ' 10byte
+varchar2(10) - 가변길이 문자형
+         - 'computer' - 'computer' 8byte
+         - '1234' - '1234' 4byte
+NCHAR(4)
+- 다양한 국가 언어 지원
+VARCHAR 와 VARCHAR2의 차이점?
+
+DATE
+DD-MON-YY로 '일-월-년도'
+TIMPSTAMP(f)
+f는 6~9자리
+'년/월/일 시:분:초:도'로 표현
+interval year(y) to month(m)
+
+interval year(3) to month 100-2 100년 2개월
+interval year(3) 100 100년
+interval month(3) 123 123개월
+
+데이터 무결성
+
+데이터가 삽입 조건에 맞아 데이터가 삽입될 수 있는지 없는지 판별하기
+
