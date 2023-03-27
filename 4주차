@@ -1,0 +1,249 @@
+-- ex) 05.01
+CREATE TABLE Department (
+    Dept_id VARCHAR2(10) NOT NULL,
+    Dept_Name VARCHAR(45) NULL,
+    Dept_Tel VARCHAR(12) NULL
+);
+-- ex) 05.02
+Describe Department;
+DESC Department;
+-- ex) 05.03
+select * from tab;
+Select * from user_catalog;
+
+--ex) 05.04
+CREATE TABLE Department (
+    Dept_id VARCHAR2(10) NOT NULL,
+    Dept_Name VARCHAR(45) NULL,
+    Dept_Tel VARCHAR(12) NULL
+);
+--ex) 05.05
+DROP TABLE Deparment;
+
+CREATE TABLE Department(
+    Dept_ID varchar(10),
+    Dept_Name varchar2(25),
+    Dept_Tel varchar2(12),
+    CONSTRAINT Deparment_pk Primary key(Dept_id));
+desc Department;
+
+--ex) 05.06
+CREATE TABLE SG_Scores (
+    Student_iD VARCHAR2(7),
+    Course_ID VARCHAR2(5),
+    Score number(8),
+    Grade VARCHAR2(2),
+    Score_Assigned DATE,
+    Constraint SG_Scores_pk PRIMARY KEY(Student_ID, Course_ID));
+DESC SG_Scores;
+
+--ex) 05.07
+CREATE TABLE Student (      
+    Dept_ID VARCHAR(2),
+    YEAR VARCHAR2(1),
+    Student_ID VARCHAR2(7) ,
+    Name VARCHAR2(20) NOT NULL,
+    ID_Number VARCHAR2(14) NOT NULL,
+    Address VARCHAR2(40),
+   CONSTRAINT PRIMARY KEY(Student_ID),
+   CONSTRAINT Student_DeptID_fk FOREIGN KEY(Dept_ID)
+   References Department(Dept_ID));
+
+desc Student;
+--ex) 05.08
+CREATE TABLE Professor(
+    Professor_ID VARCHAR2(3) PRIMARY KEY,
+    Name varchar2(20) NOT NULL,
+    Position varchar2(10) NOT NULL,
+    Dept_ID Constraint Professor_fk references Department, 
+    -- 외래키는 데이터타입을 지정하지 않아도 참조하는 컬럼의 데이터 형식까지 참조할 수 있다.
+    Telephone VARCHAR2(12));
+
+DESC Professor;
+
+--테이블 제약 조건 검색
+select * from ALL_CONSTRAINTS
+WHERE TABLE_NAME = 'PROFESSOR';
+--ex) 05.09
+
+--기본키 삭제 구문
+alter table professor
+drop primary key cascade;
+
+--Course table 생성
+create table Course (
+    Course_ID VARCHAR2(5) PRIMARY KEY,
+    Title VARCHAR2(50) not null,
+    C_Number NUMBER(1) not null,
+    Professor_ID varchar2(3) constraint Course_fk
+    references professor);
+    
+-- EX) 05.10
+DROP TABLE Professor;
+-- 테이블 삭제 후 다시 생성
+Create table professor (
+    Professor_ID VARCHAR2(3) PRIMARY KEY, 
+    Name VARCHAR2(20) NOT NULL,
+    Position VARCHAR2(10) NOT NULL,
+    -- 부모행에 있는 데이터를 지우면 자식행에 있는 데이터도 자동으로 삭제
+    Dept_ID CONSTRAINT Professor_fk
+    references Department on delete Cascade,
+    Telephone VARCHAR(13));
+
+DESC Professor;
+
+--ex) 05.11
+drop table professor;
+
+Create table professor (
+    Professor_ID VARCHAR2(3) PRIMARY KEY, 
+    Name VARCHAR2(20) NOT NULL,
+    Position VARCHAR2(10) NOT NULL,
+    Dept_ID CONSTRAINT Professor_fk references Department(Dept_id),
+    -- professor_uk로 유니크 키 값의 무결성 제약 명칭 부여
+    Telephone VARCHAR(13) CONSTRAINT Professor_uk unique);
+    
+desc Professor;
+--ex)05.12
+create table professor(
+    Professor_ID VARCHAR2(3) PRIMARY KEY,
+    Name VARCHAR2(20) not null,
+    position VARCHAR2(10) NOT NULL CONSTRAINT Professor_ck
+    CHECK(Position IN('교수','부교수','조교수','초빙교수')),
+    --check 함수는 사용자가 임의로 정해준 데이터값들만 부여할 수 있다는 것을 알려줌
+    DEPT_ID CONSTRAINT Professor_fk
+    references department,
+    Telephone VARCHAR2(12) CONSTRAINT Professor_uk UNIQUE);
+desc professor;
+select * from tab;
+-- 드랍한 테이블의 찌꺼기 데이터들이 남아 있는
+-- 휴지통 비우기
+PURGE RECYCLEBIN;
+
+--ex) 05.13
+CREATE TABLE Course (
+    Course_ID VARCHAR2(5) PRIMARY KEY,
+    Title VARCHAR2(20) NOT NULL,
+    C_Number NUMBER(1) DEFAULT 3,-- 데이터 값이 3으로 자동으로 들어감
+    Professor_ID VARCHAR2(3));
+
+insert into Course(Course_ID, Title, Professor_ID) VALUES('L1031','SQL','P12');
+
+SELECT * FROM Course;
+
+
+--ex) 05.14
+select * from tab;
+ALTER TABLE Professor ADD(
+        Email VARCHAR2(60),
+        Duty VARCHAR2(10),
+        Mgr VARCHAR2(3));
+DESC Professor;
+--ex) 05.15
+ALTER TABLE Department MODIFY(
+    DEPT_NAME VARCHAR2(15));
+    
+desc Department;
+--ex) 05.17
+ALTER TABLE Department MODIFY(
+    DEPT_NAME VARCHAR2(30));
+desc Department;
+--ex) 05.17
+ALTER TABLE Department MODIFY(
+    DEPT_NAME NOT NULL);
+desc Department;
+--ex) 5.18
+ALTER TABLE Department MODIFY(
+    DEPT_NAME NULL);
+desc Department;
+
+--ex) 5.19
+Alter table SG_Scores
+Drop PRIMARY KEY;
+desc SG_Scores;
+--ex) 5.20
+desc Department;
+--자식 테이블이 있기 때문에 삭제가 안됨
+ALTER TABLE Department DROP PRIMARY KEY;
+
+--ex) 05.21
+-- cascade를 이용해 강제로 부서테이블에 있는 개인키를 날려버림
+ALTER TABLE Department DROP PRIMARY KEY CASCADE;
+desc Department;
+desc professor;
+
+--ex) 05.22
+ALTER TABLE Department
+ADD PRIMARY KEY(Dept_ID);
+DESC Department;
+
+--제약조건 검색
+SELECT * FROM ALL_CONSTRAINTS
+WHERE TABLE_NAME = 'DEPARTMENT';
+
+--EX) 05.23
+SELECT Course_ID, title, C_Number, Professor_ID 
+FROM    COURSE;
+
+SELECT Professor_ID, Name, Position 
+from    professor;
+
+ALTER TABLE Course
+ADD CONSTRAINT Course_fk
+    FOREIGN KEY(Professor_ID) REFERENCES Professor;
+    
+--ex 05.24
+ALTER TABLE Professor
+ADD CONSTRAINT Professor_fk FOREIGN KEY (Dept_ID)
+                            REFERENCES Professor;
+desc professor;
+--ex) 05.25
+ALTER TABLE Professor
+DROP CONSTRAINT Professor_fk;
+
+desc professor;
+
+--ex) 05.26
+ALTER TABLE Professor
+DROP CONSTRAINT PROFESSOR_UK;
+desc Professor;
+
+--ex) 05.27
+ALTER TABLE Professor
+DROP COLUMN Email;
+
+--ex) 05.28
+ALTER TABLE Professor
+RENAME COLUMN Telephone TO Tel_NO;
+
+desc Professor;
+
+SELECT * FROM TAB;
+
+--EX) 05.29
+DROP TABLE STUDENT;
+
+--EX) 05.30
+ALTER TABLE professor ADD CONSTRAINT PROFESSOR_FK FOREIGN KEY(Dept_ID)
+                                        REFERENCES Department;
+desc professor;
+-- PROFESSOR에서 department 테이블을 참조 하고 있기 때문에 삭제 안됨
+DROP TABLE Department;
+-- department를 강제로 삭제할 수 있는 코드이다.
+DROP TABLE Department CASCADE CONSTRAINT;
+
+--ex) 05.31
+--휴지통 보기
+show recyclebin;
+--ex) 05.32
+-- 원래 상태로 돌려놓을 수 있음
+-- flashback
+FLASHBACK TABLE Student TO BEFORE DROP;
+SELECT * FROM Student;
+--ex) 05.33
+purge recyclebin;
+select * from tab;
+
+--ex) 05.34
+RENAME Course TO T_Course;
+SELECT * FROM TAB;
