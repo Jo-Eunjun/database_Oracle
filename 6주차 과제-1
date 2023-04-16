@@ -1,0 +1,75 @@
+CREATE TABLE EC_Product (
+Product_Code varchar2(10) NOT NULL PRIMARY KEY,
+Product_Name varchar2(20) NOT NULL,
+Standard varchar2(20),
+Unit varchar2(10),
+Unit_Price Number(7) NOT NULL,
+Left_Qty Number(5) NOT NULL,
+Company varchar2(20),
+ImageName varchar2(20),
+Info varchar2(50),
+Detail_Info varchar2(255));
+
+DROP TABLE EC_Member CASCADE CONSTRAINTS;
+DROP TABLE EC_Basket CASCADE CONSTRAINTS;
+DROP TABLE EC_Product CASCADE CONSTRAINTS;
+DROP TABLE EC_Order CASCADE CONSTRAINTS;
+
+
+CREATE TABLE EC_Member (
+UserID varchar2(10) NOT NULL PRIMARY KEY,
+Passwd varchar2(10) NOT NULL,
+Name varchar2(10) NOT NULL,
+Regist_No varchar2(14) NOT NULL Unique,
+Email varchar2(20),
+Telephone varchar2(13) NOT NULL,
+Address varchar2(40),
+Buycash Number(9) DEFAULT 0,
+Timestamp date default sysdate
+);
+
+CREATE TABLE EC_Basket (
+Order_No varchar2(10) NOT NULL PRIMARY KEY,
+Order_ID VARCHAR2(10) NOT NULL,
+Product_Code varchar2(10) NOT NULL,
+FOREIGN KEY(Order_ID) 
+REFERENCES EC_Member(UserID),
+FOREIGN KEY(Product_Code)
+REFERENCES EC_Product(Product_Code),
+Order_Qty Number(3) NOT NULL,
+Order_Date date default sysdate);
+
+CREATE TABLE EC_Order (
+Order_No varchar2(10) NOT NULL PRIMARY KEY,
+Order_ID varchar2(10) NOT NULL,
+Product_Code varchar2(10) NOT NULL,
+Order_Qty Number(3) NOT NULL,
+Csel varchar2(10),
+CMoney Number(9),
+Cdate date,
+Mdate date,
+Gubun varchar2(10));
+
+SELECT * FROM TAB;
+DESC EC_Basket;
+
+PURGE RECYCLEBIN;
+
+alter table EC_Product drop COLUMN Detail_info;
+
+ALTER TABLE EC_Product MODIFY (Info varchar(40));
+
+ALTER TABLE EC_Order MODIFY (Gubun varchar2(20));
+
+ALTER TABLE EC_Order
+ADD FOREIGN KEY (Product_Code)
+REFERENCES EC_Product(Product_Code);
+
+select *
+from user_constraints
+where table_name = 'EC_ORDER';
+column position format 9999;
+
+SELECT CONSTRAINT_NAME, COLUMN_NAME, POSITION
+FROM USER_CONS_COLUMNS
+WHERE TABLE_NAME = 'EC_ORDER' ORDER BY POSITION DESC;
